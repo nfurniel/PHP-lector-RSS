@@ -2,7 +2,8 @@
 
 require_once "conexionRSS.php";
 
-$sXML=download("http://ep00.epimg.net/rss/elpais/portada.xml");
+// Usamos la URL segura (https) y más moderna
+$sXML = download("https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/portada");
 
 $oXML=new SimpleXMLElement($sXML);
 
