@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>Lector de Noticias RSS</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Lector de Noticias RSS</title>
         <style>
             /* Reset básico y fuente moderna */
             body {
@@ -13,9 +13,7 @@
                 color: #333;
             }
 
-            img {
-                width:200px;
-            }
+            /* Estilo del Formulario (Tarjeta flotante) */
             form {
                 background-color: #ffffff;
                 max-width: 1000px;
@@ -105,6 +103,7 @@
                 border-radius: 12px;
                 overflow: hidden;
                 box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+                table-layout: fixed; /* Ayuda a que la tabla no se ensanche infinitamente */
             }
 
             /* Cabecera de la tabla */
@@ -128,7 +127,19 @@
                 color: #444;
                 font-size: 0.95rem;
                 line-height: 1.5;
+                vertical-align: top; /* Alinea el contenido arriba */
+                word-wrap: break-word; /* Evita que textos largos rompan la tabla */
             }
+
+            /* --- SOLUCIÓN PARA IMÁGENES GIGANTES --- */
+            td img {
+                max-width: 100% !important; /* Fuerza el ancho máximo al 100% del contenedor */
+                height: auto !important;    /* Mantiene la proporción */
+                display: block;
+                margin: 10px auto 15px auto; /* Espacio alrededor */
+                border-radius: 8px;
+            }
+            /* --------------------------------------- */
 
             /* Filas alternas (Zebra) */
             tr:nth-child(even) {
@@ -147,6 +158,7 @@
                 font-weight: 600;
                 border-bottom: 2px solid transparent;
                 transition: border-color 0.3s;
+                display: inline-block; /* Mejor comportamiento para el botón */
             }
 
             a:hover {
@@ -203,9 +215,8 @@
                     <input type="date" name="fecha">
                 </div>
 
-                <div style="flex-grow: 1;">
-                    <label>BUSCAR (Palabra clave)</label>
-                    <input type="text" name="buscar" placeholder="Ej: elecciones..." style="width: 90%;">
+                <div style="flex-grow: 1; min-width: 250px;"> <label>BUSCAR (Palabra clave)</label>
+                    <input type="text" name="buscar" placeholder="Ej: elecciones..." style="width: 100%; box-sizing: border-box;">
                 </div>
 
                 <input type="submit" name="filtrar" value="Filtrar Resultados">
@@ -219,23 +230,35 @@
         function filtros($sql, $link){
              $filtrar = mysqli_query($link, $sql);
              
-             // Si hay error en la consulta, lo mostramos
              if(!$filtrar) {
-                 echo "<tr><td colspan='6' style='text-align:center; color:red;'>Error en la consulta: " . mysqli_error($link) . "</td></tr>";
+                 echo "<tr><td colspan='6' style='text-align:center; color:red; padding: 20px;'>Error en la consulta: " . mysqli_error($link) . "</td></tr>";
                  return;
+             }
+
+             if(mysqli_num_rows($filtrar) === 0){
+                  echo "<tr><td colspan='6' style='text-align:center; padding: 30px; color: #666;'>No se encontraron noticias con esos filtros.</td></tr>";
              }
 
              while ($arrayFiltro = mysqli_fetch_array($filtrar)) {
                 echo "<tr>";              
-                    echo "<td><strong>".$arrayFiltro['titulo']."</strong></td>";
-                    echo "<td>".substr(strip_tags($arrayFiltro['contenido']), 0, 150)."...</td>"; // Resumen corto
+                    // Título un poco más grande
+                    echo "<td><strong style='font-size: 1.1em;'>".$arrayFiltro['titulo']."</strong></td>";
+                    
+                    // Contenido (Aquí es donde ahora se aplicará el CSS a las imágenes)
+                    echo "<td>".$arrayFiltro['contenido']."</td>"; 
+                    
+                    // Descripción (Aquí también puede haber imágenes)
                     echo "<td>".$arrayFiltro['descripcion']."</td>";                      
-                    echo "<td><span style='background:#e1f5fe; color:#0277bd; padding:3px 8px; border-radius:4px; font-size:0.8em;'>".$arrayFiltro['categoria']."</span></td>";                        
-                    echo "<td><a href='".$arrayFiltro['link']."' target='_blank'>Leer más →</a></td>";                              
+                    
+                    // Categoría estilo etiqueta
+                    echo "<td><span style='background:#e1f5fe; color:#0277bd; padding:4px 10px; border-radius:15px; font-size:0.85em; font-weight:500; display: inline-block; margin-bottom: 5px;'>".$arrayFiltro['categoria']."</span></td>";                        
+                    
+                    // Botón de enlace más visual
+                    echo "<td><a href='".$arrayFiltro['link']."' target='_blank' style='background: #3498db; color: white; padding: 6px 12px; border-radius: 4px; text-decoration: none; border:none; font-size: 0.9em;'>Leer noticia ↗</a></td>";                              
                     
                     $fecha = date_create($arrayFiltro['fPubli']);
                     $fechaConversion = date_format($fecha, 'd/m/Y');
-                    echo "<td>".$fechaConversion."</td>";
+                    echo "<td style='white-space: nowrap;'>".$fechaConversion."</td>"; // Evita que la fecha se parta en dos líneas
                 echo "</tr>";  
              }
         }
@@ -246,10 +269,13 @@
         $link = conectarBD();
         
         if(!$link){
-            printf("<p style='text-align:center; color:red;'>Conexión fallida: %s</p>", mysqli_connect_error());
+            printf("<div style='text-align:center; color:red; padding:20px; background: #fee; border-radius: 8px;'>Conexión fallida: %s</div>", mysqli_connect_error());
         }else{
         
             echo "<table>";
+            // Definimos anchos aproximados para las columnas para que quede más ordenado
+            echo "<colgroup>
+                    <col style='width: 15%'> <col style='width: 30%'> <col style='width: 20%'> <col style='width: 10%'> <col style='width: 10%'> <col style='width: 10%'> </colgroup>";
             echo "<thead>
                     <tr>
                         <th>TITULO</th>
@@ -271,26 +297,19 @@
                 $f = $_REQUEST['fecha'];
                 $palabra = $_REQUEST["buscar"];
                 
-                // Construcción dinámica de la Query (Más limpio)
                 $sql = "SELECT * FROM " . $periodicosMin . " WHERE 1=1";
 
-                if($cat != "") {
-                    $sql .= " AND categoria LIKE '%$cat%'";
-                }
-                if($f != "") {
-                    $sql .= " AND fPubli='$f'";
-                }
-                if($palabra != "") {
-                    $sql .= " AND descripcion LIKE '%$palabra%'";
-                }
+                if($cat != "") { $sql .= " AND categoria LIKE '%$cat%'"; }
+                if($f != "") { $sql .= " AND fPubli='$f'"; }
+                if($palabra != "") { $sql .= " AND descripcion LIKE '%$palabra%'"; }
 
-                $sql .= " ORDER BY fPubli DESC";
+                $sql .= " ORDER BY fPubli DESC LIMIT 50"; // Limitamos a 50 para que no cargue lento
                 
                 filtros($sql, $link);
                 
             } else {
-                // Consulta por defecto al entrar
-                $sql = "SELECT * FROM elpais ORDER BY fPubli desc";
+                // Consulta por defecto (las últimas 20 de El País)
+                $sql = "SELECT * FROM elpais ORDER BY fPubli DESC LIMIT 20";
                 filtros($sql, $link);      
             }
                   
@@ -298,6 +317,6 @@
             echo "</table>";   
         }
         ?>
-        
+        <div style="height: 50px;"></div>
     </body>
 </html>
