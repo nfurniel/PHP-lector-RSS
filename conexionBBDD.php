@@ -1,10 +1,20 @@
 <?php
 
-$Repit=false;
-$host="localhost";
-$user="root";
-$password="";
+function conectarBD() {
+    $db_host = getenv('DB_HOST') ?: 'localhost';
+    $db_user = getenv('DB_USER') ?: 'root';
+    $db_pass = getenv('DB_PASS') ?: '';
+    $db_name = getenv('DB_NAME') ?: 'periodicos';
+    $db_port = getenv('DB_PORT') ?: 3306;
 
-$link= mysqli_connect($host,$user,$password);
-$tildes=$link->query("SET NAMES 'utf8'");
-mysqli_select_db($link,'periodicos');
+    $conexion = mysqli_connect($db_host, $db_user, $db_pass, $db_name, $db_port);
+
+    if (!$conexion) {
+        // Esto mostrará el error exacto si falla
+        die("Error de conexión (" . mysqli_connect_errno() . "): " . mysqli_connect_error());
+    }
+
+    mysqli_set_charset($conexion, "utf8");
+    return $conexion;
+}
+?>
