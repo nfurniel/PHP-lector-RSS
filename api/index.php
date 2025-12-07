@@ -13,7 +13,9 @@
                 color: #333;
             }
 
-            /* Estilo del Formulario (Tarjeta flotante) */
+            img {
+                width:200px;
+            }
             form {
                 background-color: #ffffff;
                 max-width: 1000px;
