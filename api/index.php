@@ -8,6 +8,169 @@ and open the template in the editor.
     <head>
         <meta charset="UTF-8">
         <title></title>
+        <style>
+    /* Reset básico y fuente moderna */
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f0f2f5;
+        margin: 0;
+        padding: 20px;
+        color: #333;
+    }
+
+    /* Estilo del Formulario (Tarjeta flotante) */
+    form {
+        background-color: #ffffff;
+        max-width: 1000px;
+        margin: 0 auto 30px auto;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        border: 1px solid #e1e4e8;
+    }
+
+    fieldset {
+        border: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        align-items: flex-end; /* Alinea los inputs y el botón abajo */
+        justify-content: center;
+    }
+
+    legend {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #2c3e50;
+        width: 100%;
+        text-align: center;
+        margin-bottom: 20px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    label {
+        display: block;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #555;
+        margin-bottom: 5px;
+    }
+
+    /* Inputs bonitos */
+    select, input[type="date"], input[type="text"] {
+        padding: 10px 15px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 1rem;
+        background-color: #fff;
+        transition: border-color 0.3s;
+        min-width: 150px;
+    }
+
+    select:focus, input:focus {
+        border-color: #3498db;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+    }
+
+    /* Botón de filtrar */
+    input[type="submit"] {
+        background-color: #3498db;
+        color: white;
+        border: none;
+        padding: 11px 25px;
+        border-radius: 6px;
+        font-size: 1rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.1s;
+    }
+
+    input[type="submit"]:hover {
+        background-color: #2980b9;
+    }
+
+    input[type="submit"]:active {
+        transform: scale(0.98);
+    }
+
+    /* Estilos de la Tabla */
+    table {
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        border-collapse: separate; /* Permite bordes redondeados */
+        border-spacing: 0;
+        background-color: #ffffff;
+        border-radius: 12px;
+        overflow: hidden; /* Recorta las esquinas */
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    }
+
+    /* Cabecera de la tabla */
+    table tr:first-child th {
+        background-color: #2c3e50;
+        color: #ffffff;
+        padding: 18px;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        letter-spacing: 0.05em;
+        border: none;
+    }
+    
+    /* Forzamos el color blanco en los textos de la cabecera */
+    table tr:first-child th p {
+        color: white !important;
+        margin: 0;
+    }
+
+    /* Celdas del cuerpo */
+    th, td {
+        padding: 15px 20px;
+        text-align: left;
+        border-bottom: 1px solid #eee;
+        font-weight: normal;
+        color: #444;
+        font-size: 0.95rem;
+        line-height: 1.5;
+    }
+
+    /* Filas alternas (Zebra) */
+    tr:nth-child(even) {
+        background-color: #f8f9fa;
+    }
+
+    /* Efecto Hover al pasar el ratón */
+    tr:hover {
+        background-color: #e8f4fd;
+    }
+
+    /* Enlaces dentro de la tabla */
+    a {
+        color: #3498db;
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+    a:hover {
+        text-decoration: underline;
+        color: #1d6fa5;
+    }
+    
+    /* Ajuste para móviles */
+    @media (max-width: 768px) {
+        fieldset {
+            flex-direction: column;
+            align-items: stretch;
+        }
+        input[type="submit"] {
+            width: 100%;
+        }
+    }
+</style>
     </head>
     <body>
         <form action="index.php">
